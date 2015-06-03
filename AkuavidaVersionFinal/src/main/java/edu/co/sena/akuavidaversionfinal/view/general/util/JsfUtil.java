@@ -65,6 +65,8 @@ public class JsfUtil {
 
         CREATE,
         DELETE,
-        UPDATE
+        DELETEBUSCAR,
+        UPDATE,
+        UPDATEBUSCAR
     }
 }

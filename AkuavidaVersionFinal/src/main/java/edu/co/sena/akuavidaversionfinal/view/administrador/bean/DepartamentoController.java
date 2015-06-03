@@ -14,6 +14,7 @@ import javax.ejb.EJB;
 import javax.ejb.EJBException;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
+import javax.faces.bean.ViewScoped;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
@@ -30,6 +31,7 @@ public class DepartamentoController implements Serializable {
     private Departamento selected;
     private Departamento selectedBuscar;
     private Integer idBuscar;
+    private String nombreBuscar;
 
     public DepartamentoController() {
     }
@@ -67,6 +69,15 @@ public class DepartamentoController implements Serializable {
 
     public void update() {
         persist(PersistAction.UPDATE, ResourceBundle.getBundle("/Bundle").getString("DepartamentoUpdated"));
+        selectedBuscar = null;
+        itemsBuscados = null;
+    }
+
+    public void updateBuscar() {
+        persist(PersistAction.UPDATEBUSCAR, ResourceBundle.getBundle("/Bundle").getString("DepartamentoUpdated"));
+        items = null;
+        selected = null;
+
     }
 
     public void destroy() {
@@ -77,6 +88,17 @@ public class DepartamentoController implements Serializable {
         }
     }
 
+    public void eliminarBuscado() {
+        persist(PersistAction.DELETEBUSCAR, ResourceBundle.getBundle("/Bundle").getString("DepartamentoDeleted"));
+        if (!JsfUtil.isValidationFailed()) {
+            selected = null; // Remove selection
+            items = null;    // Invalidate list of items to trigger re-query.
+        }
+        itemsBuscados = null;
+        selectedBuscar = null;
+
+    }
+
     public List<Departamento> getItems() {
         if (items == null) {
             items = getFacade().findAll();
@@ -84,10 +106,14 @@ public class DepartamentoController implements Serializable {
         return items;
     }
 
-    public List<Departamento> getItemsBuscados() {
+    public List<Departamento> buscarPorId() {
         itemsBuscados = getFacade().finById(idBuscar);
+        nombreBuscar = null;
+        items = null;
         return itemsBuscados;
     }
+
+    
 
     private void persist(PersistAction persistAction, String successMessage) {
         if (selected != null) {
@@ -97,6 +123,31 @@ public class DepartamentoController implements Serializable {
                     getFacade().edit(selected);
                 } else {
                     getFacade().remove(selected);
+                }
+                JsfUtil.addSuccessMessage(successMessage);
+            } catch (EJBException ex) {
+                String msg = "";
+                Throwable cause = ex.getCause();
+                if (cause != null) {
+                    msg = cause.getLocalizedMessage();
+                }
+                if (msg.length() > 0) {
+                    JsfUtil.addErrorMessage(msg);
+                } else {
+                    JsfUtil.addErrorMessage(ex, ResourceBundle.getBundle("/Bundle").getString("PersistenceErrorOccured"));
+                }
+            } catch (Exception ex) {
+                Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
+                JsfUtil.addErrorMessage(ex, ResourceBundle.getBundle("/Bundle").getString("PersistenceErrorOccured"));
+            }
+        }
+        if (selectedBuscar != null) {
+            setEmbeddableKeys();
+            try {
+                if (persistAction != PersistAction.DELETEBUSCAR) {
+                    getFacade().edit(selectedBuscar);
+                } else {
+                    getFacade().remove(selectedBuscar);
                 }
                 JsfUtil.addSuccessMessage(successMessage);
             } catch (EJBException ex) {
@@ -136,10 +187,7 @@ public class DepartamentoController implements Serializable {
     public void setIdBuscar(Integer idBuscar) {
         this.idBuscar = idBuscar;
     }
-
-    public void setItemsBuscados(List<Departamento> itemsBuscados) {
-        this.itemsBuscados = itemsBuscados;
-    }
+    
 
     public Departamento getSelectedBuscar() {
         return selectedBuscar;
@@ -147,6 +195,22 @@ public class DepartamentoController implements Serializable {
 
     public void setSelectedBuscar(Departamento selectedBuscar) {
         this.selectedBuscar = selectedBuscar;
+    }
+
+    public List<Departamento> getItemsBuscados() {
+        return itemsBuscados;
+    }
+
+    public void setItemsBuscados(List<Departamento> itemsBuscados) {
+        this.itemsBuscados = itemsBuscados;
+    }
+
+    public String getNombreBuscar() {
+        return nombreBuscar;
+    }
+
+    public void setNombreBuscar(String nombreBuscar) {
+        this.nombreBuscar = nombreBuscar;
     }
 
     @FacesConverter(forClass = Departamento.class)
