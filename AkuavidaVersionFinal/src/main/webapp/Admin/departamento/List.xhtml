@@ -51,7 +51,6 @@
             </h:form>
 
             <!-- El Buscador De Departamentos -->
-
             <p:panel header="#{bundle.BuscadorDepartamentoTitle}" id="panelBusqueda">
                 <p:messages autoUpdate="true"/>
                 <h:panelGroup id="displayBuscar">
@@ -64,17 +63,24 @@
                             <p:message for="buscarIdDepartamento" />
                         </h:panelGrid>
                     </h:form>
-
-
-
+                    
+                    <!--Formulario de buscar por nombre -->
+                    <h:form id="BuscarDepartamentoForm2">
+                        <p:messages autoUpdate="true" closable="true" for="buscarIdDepartamento"/>
+                        <h:panelGrid id="grid1" columns="5"  cellspacing="0">
+                            <p:outputLabel for="buscarNomDep" value="#{bundle.BuscarDepartamentoLabel_NombreDepartamento}" />
+                            <p:inputText id="buscarNomDep" required="true" value="#{departamentoController.nombreBuscar}" />
+                            <p:commandButton id="botonNomDep" icon="ui-icon-search" value="#{bundle.Buscar}" update=":BuscarDepartamentoListForm, :panelBusqueda " actionListener="#{departamentoController.buscarPorNombre}" />
+                            <p:message for="buscarNomDep" />
+                        </h:panelGrid>
+                    </h:form>
                 </h:panelGroup>
             </p:panel>
 
             <!-- Resultados De La Busqueda De Departamentos -->
-
             <h:form id="BuscarDepartamentoListForm">
                 <p:panel header="#{bundle.BuscarListDepartamentoTitle}" id="panelBuscar">
-                    
+
                     <p:dataTable id="datalist2" value="#{departamentoController.itemsBuscados}" var="itemEncontrados"
                                  selectionMode="single" selection="#{departamentoController.selectedBuscar}"
                                  paginator="true"

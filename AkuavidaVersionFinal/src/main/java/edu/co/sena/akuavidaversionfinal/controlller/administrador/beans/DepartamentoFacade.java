@@ -33,16 +33,14 @@ public class DepartamentoFacade extends AbstractFacade<Departamento> {
 
     public List<Departamento> finById(Object id) {
         Query queryJPQL = getEntityManager().createNamedQuery("Departamento.findByIdDepartamento");
-        queryJPQL.setParameter("idDepartamento",id);
+        queryJPQL.setParameter("idDepartamento", id);
         return queryJPQL.getResultList();
     }
-    
+
     public List<Departamento> findByParteNombre(String nombreDepBuscar) {
-        String sqlQuery = "SELECT * FROM departamento dep where dep.nombreDepartamento like '%"+nombreDepBuscar+"%';";
+        String sqlQuery = "SELECT * FROM departamento dep where dep.NOMBRE_DEPARTAMENTO like '%" + nombreDepBuscar + "%';";
         Query query2 = getEntityManager().createNativeQuery(sqlQuery, Departamento.class);
         return query2.getResultList();
     }
-    
-    
 
 }

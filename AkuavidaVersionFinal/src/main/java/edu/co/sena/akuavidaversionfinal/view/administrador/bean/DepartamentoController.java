@@ -113,7 +113,12 @@ public class DepartamentoController implements Serializable {
         return itemsBuscados;
     }
 
-    
+    public List<Departamento> buscarPorNombre() {
+        itemsBuscados = getFacade().findByParteNombre(nombreBuscar);
+        items = null;
+        idBuscar = null;
+        return itemsBuscados;
+    }
 
     private void persist(PersistAction persistAction, String successMessage) {
         if (selected != null) {
@@ -187,7 +192,6 @@ public class DepartamentoController implements Serializable {
     public void setIdBuscar(Integer idBuscar) {
         this.idBuscar = idBuscar;
     }
-    
 
     public Departamento getSelectedBuscar() {
         return selectedBuscar;
