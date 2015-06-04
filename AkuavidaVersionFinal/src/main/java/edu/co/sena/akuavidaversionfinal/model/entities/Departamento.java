@@ -109,7 +109,7 @@ public class Departamento implements Serializable {
 
     @Override
     public String toString() {
-        return "edu.co.sena.akuavidaversionfinal.model.entities.Departamento[ idDepartamento=" + idDepartamento + " ]";
+        return getNombreDepartamento();
     }
     
 }

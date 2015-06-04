@@ -6,9 +6,11 @@
 package edu.co.sena.akuavidaversionfinal.controlller.administrador.beans;
 
 import edu.co.sena.akuavidaversionfinal.model.entities.Municipio;
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 /**
  *
@@ -26,6 +28,18 @@ public class MunicipioFacade extends AbstractFacade<Municipio> {
 
     public MunicipioFacade() {
         super(Municipio.class);
+    }
+    
+    public List<Municipio> finById(Object id) {
+        Query queryJPQL = getEntityManager().createNamedQuery("Municipio.findByIdMunicipio");
+        queryJPQL.setParameter("idMunicipio", id);
+        return queryJPQL.getResultList();
+    }
+    
+    public List<Municipio> findByParteNombre(String nombreMunBuscar) {
+        String sqlQuery = "SELECT * FROM municipio mun where mun.NOMBRE_MUNICIPIO like '%" + nombreMunBuscar + "%';";
+        Query query2 = getEntityManager().createNativeQuery(sqlQuery, Municipio.class);
+        return query2.getResultList();
     }
     
 }

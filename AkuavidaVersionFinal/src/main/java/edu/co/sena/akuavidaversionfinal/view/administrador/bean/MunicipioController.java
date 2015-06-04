@@ -26,7 +26,12 @@ public class MunicipioController implements Serializable {
     @EJB
     private edu.co.sena.akuavidaversionfinal.controlller.administrador.beans.MunicipioFacade ejbFacade;
     private List<Municipio> items = null;
+    private List<Municipio> itemsBuscados = null;
     private Municipio selected;
+    private Municipio selectedBuscar;
+
+    private Integer idBuscar;
+    private String nombreBuscar;
 
     public MunicipioController() {
     }
@@ -64,6 +69,14 @@ public class MunicipioController implements Serializable {
 
     public void update() {
         persist(PersistAction.UPDATE, ResourceBundle.getBundle("/Bundle").getString("MunicipioUpdated"));
+        selectedBuscar = null;
+        itemsBuscados = null;
+    }
+
+    public void updateBuscar() {
+        persist(PersistAction.UPDATEBUSCAR, ResourceBundle.getBundle("/Bundle").getString("MunicipioUpdated"));
+        items = null;
+        selected = null;
     }
 
     public void destroy() {
@@ -74,11 +87,35 @@ public class MunicipioController implements Serializable {
         }
     }
 
+    public void eliminarBuscado() {
+        persist(PersistAction.DELETEBUSCAR, ResourceBundle.getBundle("/Bundle").getString("MunicipioDeleted"));
+        if (!JsfUtil.isValidationFailed()) {
+            selected = null; // Remove selection
+            items = null;    // Invalidate list of items to trigger re-query.
+        }
+        itemsBuscados = null;
+        selectedBuscar = null;
+    }
+
     public List<Municipio> getItems() {
         if (items == null) {
             items = getFacade().findAll();
         }
         return items;
+    }
+
+    public List<Municipio> buscarPorId() {
+        itemsBuscados = getFacade().finById(idBuscar);
+        nombreBuscar = null;
+        items = null;
+        return itemsBuscados;
+    }
+
+    public List<Municipio> buscarPorNombre() {
+        itemsBuscados = getFacade().findByParteNombre(nombreBuscar);
+        items = null;
+        idBuscar = null;
+        return itemsBuscados;
     }
 
     private void persist(PersistAction persistAction, String successMessage) {
@@ -89,6 +126,31 @@ public class MunicipioController implements Serializable {
                     getFacade().edit(selected);
                 } else {
                     getFacade().remove(selected);
+                }
+                JsfUtil.addSuccessMessage(successMessage);
+            } catch (EJBException ex) {
+                String msg = "";
+                Throwable cause = ex.getCause();
+                if (cause != null) {
+                    msg = cause.getLocalizedMessage();
+                }
+                if (msg.length() > 0) {
+                    JsfUtil.addErrorMessage(msg);
+                } else {
+                    JsfUtil.addErrorMessage(ex, ResourceBundle.getBundle("/Bundle").getString("PersistenceErrorOccured"));
+                }
+            } catch (Exception ex) {
+                Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
+                JsfUtil.addErrorMessage(ex, ResourceBundle.getBundle("/Bundle").getString("PersistenceErrorOccured"));
+            }
+        }
+        if (selectedBuscar != null) {
+            setEmbeddableKeys();
+            try {
+                if (persistAction != PersistAction.DELETEBUSCAR) {
+                    getFacade().edit(selectedBuscar);
+                } else {
+                    getFacade().remove(selectedBuscar);
                 }
                 JsfUtil.addSuccessMessage(successMessage);
             } catch (EJBException ex) {
@@ -119,6 +181,38 @@ public class MunicipioController implements Serializable {
 
     public List<Municipio> getItemsAvailableSelectOne() {
         return getFacade().findAll();
+    }
+
+    public List<Municipio> getItemsBuscados() {
+        return itemsBuscados;
+    }
+
+    public void setItemsBuscados(List<Municipio> itemsBuscados) {
+        this.itemsBuscados = itemsBuscados;
+    }
+
+    public Municipio getSelectedBuscar() {
+        return selectedBuscar;
+    }
+
+    public void setSelectedBuscar(Municipio selectedBuscar) {
+        this.selectedBuscar = selectedBuscar;
+    }
+
+    public Integer getIdBuscar() {
+        return idBuscar;
+    }
+
+    public void setIdBuscar(Integer idBuscar) {
+        this.idBuscar = idBuscar;
+    }
+
+    public String getNombreBuscar() {
+        return nombreBuscar;
+    }
+
+    public void setNombreBuscar(String nombreBuscar) {
+        this.nombreBuscar = nombreBuscar;
     }
 
     @FacesConverter(forClass = Municipio.class)
