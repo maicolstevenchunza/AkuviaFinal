@@ -64,7 +64,7 @@ public class Usuario implements Serializable {
     @Size(min = 1, max = 45)
     @Column(name = "correo")
     private String correo;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuarioidUsuario", fetch = FetchType.EAGER)
+    @OneToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}, mappedBy = "usuarioidUsuario", fetch = FetchType.EAGER)
     private List<Cuenta> cuentaList;
 
     public Usuario() {

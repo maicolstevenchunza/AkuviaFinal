@@ -8,7 +8,7 @@ import javax.faces.convert.Converter;
 import javax.faces.model.SelectItem;
 
 public class JsfUtil {
-
+ 
     public static SelectItem[] getSelectItems(List<?> entities, boolean selectOne) {
         int size = selectOne ? entities.size() + 1 : entities.size();
         SelectItem[] items = new SelectItem[size];
@@ -68,5 +68,5 @@ public class JsfUtil {
         DELETEBUSCAR,
         UPDATE,
         UPDATEBUSCAR
-    }
+           }
 }

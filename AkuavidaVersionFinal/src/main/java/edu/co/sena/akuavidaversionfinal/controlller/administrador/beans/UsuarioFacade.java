@@ -6,9 +6,11 @@
 package edu.co.sena.akuavidaversionfinal.controlller.administrador.beans;
 
 import edu.co.sena.akuavidaversionfinal.model.entities.Usuario;
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 /**
  *
@@ -28,4 +30,15 @@ public class UsuarioFacade extends AbstractFacade<Usuario> {
         super(Usuario.class);
     }
     
+    public List<Usuario> finById(Object id) {
+        Query queryJPQL = getEntityManager().createNamedQuery("Usuario.findByIdUsuario");
+        queryJPQL.setParameter("idUsuario", id);
+        return queryJPQL.getResultList();
+    }
+    
+    public List<Usuario> findByParteRol(String rolUsuBuscar) {
+        Query queryJPQL = getEntityManager().createNamedQuery("Usuario.findByRol");
+        queryJPQL.setParameter("rol", rolUsuBuscar);
+        return queryJPQL.getResultList();
+    }
 }

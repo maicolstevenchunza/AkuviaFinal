@@ -12,7 +12,7 @@
         <ui:define name="title">
             <h:outputText value="#{bundle.ListUsuarioTitle}"></h:outputText>
         </ui:define>
-
+        <!-- CRUD De Usuario -->
         <ui:define name="body">
             <h:form id="UsuarioListForm">
                 <p:panel header="#{bundle.ListUsuarioTitle}">
@@ -67,9 +67,97 @@
                 </p:panel>
             </h:form>
 
+            <!-- El Buscador De Usuarios -->
+            <p:panel header="#{bundle.BuscadorUsuarioTitle}" id="panelBusqueda">
+                <p:messages autoUpdate="true"/>
+                <h:panelGroup id="displayBuscar">
+                    <h:form id="BuscarUsuarioForm1">
+                        <p:messages autoUpdate="true" closable="true" for="buscarIdUsuario"/>
+                        <h:panelGrid id="grid1" columns="5"  cellspacing="0">
+                            <p:outputLabel for="buscarIdUsu" value="#{bundle.BuscarUsuarioLabel_IdUsuario}"  />
+                            <p:inputText id="buscarIdUsu" value="#{usuarioController.idBuscar}" title="#{bundle.BuscarUsuarioTitle_IdUsuario}" required="true" requiredMessage="#{bundle.CreateUsuarioRequiredMessage_rolUsuario}"/>
+                            <p:commandButton id="botonIdUsu" icon="ui-icon-search" value="#{bundle.Buscar}" update=":BuscarUsuarioListForm, :panelBusqueda" actionListener="#{usuarioController.buscarPorId}"/>
+                            <p:message for="buscarIdUsu" />
+                        </h:panelGrid>
+                    </h:form>
+
+                    <!--Formulario de buscar por rol -->
+                    <h:form id="BuscarUsuarioForm2">
+                        <p:messages autoUpdate="true" closable="true" for="buscarIdUsuario"/>
+                        <h:panelGrid id="grid1" columns="5"  cellspacing="0" >
+                            <p:outputLabel for="buscarRolUsu" value="#{bundle.BuscarUsuarioLabel_Rol}" />
+                            <p:selectOneMenu id="buscarRolUsu" value="#{usuarioController.rolBuscar}" required="true" requiredMessage="#{bundle.CreateUsuarioRequiredMessage_rol}">
+                                <f:selectItems value="#{usuarioController.listroles}"
+                                               var="usuarioRolItemBuscar"
+                                               itemValue="#{usuarioRolItemBuscar}"/>
+                            </p:selectOneMenu>
+                            <p:commandButton id="botonRol" icon="ui-icon-search" value="#{bundle.Buscar}" update=":BuscarUsuarioListForm, :panelBusqueda " actionListener="#{usuarioController.buscarPorRol}" />
+                            <p:message for="buscarRolUsu" />
+                        </h:panelGrid>
+                    </h:form>
+                </h:panelGroup>
+            </p:panel>
+
+            <!-- Resultados De La Busqueda De Usuarios -->
+            <h:form id="BuscarUsuarioListForm">
+                <p:panel header="#{bundle.BuscarListUsuarioTitle}" id="panelBuscar">
+
+                    <p:dataTable id="datalist2" value="#{usuarioController.itemsBuscados}" var="itemEncontrados"
+                                 selectionMode="single" selection="#{usuarioController.selectedBuscar}"
+                                 paginator="true"
+                                 rowKey="#{itemEncontrados.idUsuario}"
+                                 rows="5"
+                                 rowsPerPageTemplate="5,10,20,30,40,50"
+                                 >
+
+                        <p:ajax event="rowSelect"   update="viewButtonBuscar2 editButtonBuscar2 deleteButtonBuscar2"/>
+                        <p:ajax event="rowUnselect" update="viewButtonBuscar2 editButtonBuscar2 deleteButtonBuscar2"/>
+
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListUsuarioTitle_idUsuario}"/>
+                            </f:facet>
+                            <h:outputText value="#{itemEncontrados.idUsuario}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListUsuarioTitle_rol}"/>
+                            </f:facet>
+                            <h:outputText value="#{itemEncontrados.rol}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListUsuarioTitle_estado}"/>
+                            </f:facet>
+                            <h:outputText value="#{itemEncontrados.estado}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListUsuarioTitle_contrasena}"/>
+                            </f:facet>
+                            <h:outputText value="#{itemEncontrados.contrasena}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListUsuarioTitle_correo}"/>
+                            </f:facet>
+                            <h:outputText value="#{itemEncontrados.correo}"/>
+                        </p:column>
+                        <f:facet name="footer">
+
+                            <p:commandButton id="viewButtonBuscar2"   icon="ui-icon-search" value="#{bundle.View}" update=":UsuarioViewFormBuscar" oncomplete="PF('UsuarioViewDialogBuscar').show()" disabled="#{empty usuarioController.selectedBuscar}"/>
+                            <p:commandButton id="editButtonBuscar2"   icon="ui-icon-pencil" value="#{bundle.Edit}" update=":UsuarioEditFormBuscar" oncomplete="PF('UsuarioEditDialogBuscar').show()" disabled="#{empty usuarioController.selectedBuscar}"/>
+                            <p:commandButton id="deleteButtonBuscar2" icon="ui-icon-trash"  value="#{bundle.Delete}" actionListener="#{usuarioController.eliminarBuscado}" update=":growl,:BuscarUsuarioListForm:datalist2, :UsuarioListForm:datalist" disabled="#{empty usuarioController.selectedBuscar}"/>
+                        </f:facet>
+                    </p:dataTable>
+                </p:panel>
+            </h:form>
+
             <ui:include src="Create.xhtml"/>
             <ui:include src="Edit.xhtml"/>
             <ui:include src="View.xhtml"/>
+            <ui:include src="ViewBuscar.xhtml"/>
+            <ui:include src="EditBuscar.xhtml"/>
         </ui:define>
     </ui:composition>
 

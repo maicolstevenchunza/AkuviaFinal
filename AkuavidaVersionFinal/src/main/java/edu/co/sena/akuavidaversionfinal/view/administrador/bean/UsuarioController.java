@@ -6,6 +6,7 @@ import edu.co.sena.akuavidaversionfinal.view.general.util.JsfUtil.PersistAction;
 import edu.co.sena.akuavidaversionfinal.controlller.administrador.beans.UsuarioFacade;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -26,9 +27,21 @@ public class UsuarioController implements Serializable {
     @EJB
     private edu.co.sena.akuavidaversionfinal.controlller.administrador.beans.UsuarioFacade ejbFacade;
     private List<Usuario> items = null;
+    private List<Usuario> itemsBuscados = null;
     private Usuario selected;
+    private Usuario selectedBuscar;
+    private String idBuscar;
+    private String rolBuscar;
+    private final List<String> listroles;
+    private final List<String> listEstados;
 
     public UsuarioController() {
+        this.listroles = Arrays.asList(ResourceBundle.getBundle("/Bundle").getString("SelectRolCliente"),
+                ResourceBundle.getBundle("/Bundle").getString("SelectRolEmpleado"),
+                ResourceBundle.getBundle("/Bundle").getString("SelectRolAdministrador"));
+        this.listEstados = Arrays.asList(ResourceBundle.getBundle("/Bundle").getString("SelectEstadoActivo"),
+                ResourceBundle.getBundle("/Bundle").getString("SelectEstadoInactivo"));
+
     }
 
     public Usuario getSelected() {
@@ -66,6 +79,13 @@ public class UsuarioController implements Serializable {
         persist(PersistAction.UPDATE, ResourceBundle.getBundle("/Bundle").getString("UsuarioUpdated"));
     }
 
+    public void updateBuscar() {
+        persist(PersistAction.UPDATEBUSCAR, ResourceBundle.getBundle("/Bundle").getString("UsuarioUpdated"));
+        items = null;
+        selected = null;
+
+    }
+
     public void destroy() {
         persist(PersistAction.DELETE, ResourceBundle.getBundle("/Bundle").getString("UsuarioDeleted"));
         if (!JsfUtil.isValidationFailed()) {
@@ -74,11 +94,36 @@ public class UsuarioController implements Serializable {
         }
     }
 
+    public void eliminarBuscado() {
+        persist(PersistAction.DELETEBUSCAR, ResourceBundle.getBundle("/Bundle").getString("UsuarioDeleted"));
+        if (!JsfUtil.isValidationFailed()) {
+            selected = null; // Remove selection
+            items = null;    // Invalidate list of items to trigger re-query.
+        }
+        itemsBuscados = null;
+        selectedBuscar = null;
+
+    }
+
     public List<Usuario> getItems() {
         if (items == null) {
             items = getFacade().findAll();
         }
         return items;
+    }
+
+    public List<Usuario> buscarPorId() {
+        itemsBuscados = getFacade().finById(idBuscar);
+        rolBuscar = null;
+        items = null;
+        return itemsBuscados;
+    }
+
+    public List<Usuario> buscarPorRol() {
+        itemsBuscados = getFacade().findByParteRol(rolBuscar);
+        items = null;
+        idBuscar = null;
+        return itemsBuscados;
     }
 
     private void persist(PersistAction persistAction, String successMessage) {
@@ -89,6 +134,31 @@ public class UsuarioController implements Serializable {
                     getFacade().edit(selected);
                 } else {
                     getFacade().remove(selected);
+                }
+                JsfUtil.addSuccessMessage(successMessage);
+            } catch (EJBException ex) {
+                String msg = "";
+                Throwable cause = ex.getCause();
+                if (cause != null) {
+                    msg = cause.getLocalizedMessage();
+                }
+                if (msg.length() > 0) {
+                    JsfUtil.addErrorMessage(msg);
+                } else {
+                    JsfUtil.addErrorMessage(ex, ResourceBundle.getBundle("/Bundle").getString("PersistenceErrorOccured"));
+                }
+            } catch (Exception ex) {
+                Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
+                JsfUtil.addErrorMessage(ex, ResourceBundle.getBundle("/Bundle").getString("PersistenceErrorOccured"));
+            }
+        }
+        if (selectedBuscar != null) {
+            setEmbeddableKeys();
+            try {
+                if (persistAction != PersistAction.DELETEBUSCAR) {
+                    getFacade().edit(selectedBuscar);
+                } else {
+                    getFacade().remove(selectedBuscar);
                 }
                 JsfUtil.addSuccessMessage(successMessage);
             } catch (EJBException ex) {
@@ -119,6 +189,46 @@ public class UsuarioController implements Serializable {
 
     public List<Usuario> getItemsAvailableSelectOne() {
         return getFacade().findAll();
+    }
+
+    public List<Usuario> getItemsBuscados() {
+        return itemsBuscados;
+    }
+
+    public void setItemsBuscados(List<Usuario> itemsBuscados) {
+        this.itemsBuscados = itemsBuscados;
+    }
+
+    public Usuario getSelectedBuscar() {
+        return selectedBuscar;
+    }
+
+    public void setSelectedBuscar(Usuario selectedBuscar) {
+        this.selectedBuscar = selectedBuscar;
+    }
+
+    public String getIdBuscar() {
+        return idBuscar;
+    }
+
+    public void setIdBuscar(String idBuscar) {
+        this.idBuscar = idBuscar;
+    }
+
+    public String getRolBuscar() {
+        return rolBuscar;
+    }
+
+    public void setRolBuscar(String rolBuscar) {
+        this.rolBuscar = rolBuscar;
+    }
+
+    public List<String> getListroles() {
+        return listroles;
+    }
+
+    public List<String> getListEstados() {
+        return listEstados;
     }
 
     @FacesConverter(forClass = Usuario.class)
