@@ -12,15 +12,19 @@
             <h:form id="UsuarioEditFormBuscar">
                 <h:panelGroup id="display">
                     <p:panelGrid columns="2" rendered="#{usuarioController.selectedBuscar != null}">
-                        <p:outputLabel value="#{bundle.EditUsuarioLabel_idUsuario}" for="idUsuario" />
-                        <p:inputText id="idUsuario" value="#{usuarioController.selectedBuscar.idUsuario}" title="#{bundle.EditUsuarioTitle_idUsuario}" required="true" requiredMessage="#{bundle.EditUsuarioRequiredMessage_idUsuario}"/>
-                        <p:outputLabel value="#{bundle.EditUsuarioLabel_rol}" for="rol" />
-                        <p:inputText id="rol" value="#{usuarioController.selectedBuscar.rol}" title="#{bundle.EditUsuarioTitle_rol}" required="true" requiredMessage="#{bundle.EditUsuarioRequiredMessage_rol}"/>
-                        <p:outputLabel value="#{bundle.EditUsuarioLabel_estado}" for="estado" />
-                        <p:inputText id="estado" value="#{usuarioController.selectedBuscar.estado}" title="#{bundle.EditUsuarioTitle_estado}" required="true" requiredMessage="#{bundle.EditUsuarioRequiredMessage_estado}"/>
-                        <p:outputLabel value="#{bundle.EditUsuarioLabel_contrasena}" for="contrasena" />
-                        <p:inputText id="contrasena" value="#{usuarioController.selectedBuscar.contrasena}" title="#{bundle.EditUsuarioTitle_contrasena}" required="true" requiredMessage="#{bundle.EditUsuarioRequiredMessage_contrasena}"/>
-                        <p:outputLabel value="#{bundle.EditUsuarioLabel_correo}" for="correo" />
+                        <p:outputLabel value="#{bundle.CreateUsuarioLabel_rol}" for="usuarioRolEditBuscar" />
+                        <p:selectOneMenu id="usuarioRolEditBuscar" value="#{usuarioController.selectedBuscar.rol}" required="true" requiredMessage="#{bundle.CreateUsuarioRequiredMessage_rol}">
+                            <f:selectItems value="#{usuarioController.listroles}"
+                                           var="usuarioRolEditItemBuscar"
+                                           itemValue="#{usuarioRolEditItemBuscar}"/>
+                        </p:selectOneMenu>
+                        <p:outputLabel value="#{bundle.CreateUsuarioLabel_estado}" for="usuarioEstadoEditBuscar" />
+                        <p:selectOneMenu id="usuarioEstadoEditBuscar" value="#{usuarioController.selectedBuscar.estado}" required="true" requiredMessage="#{bundle.CreateUsuarioRequiredMessage_estado}">
+                            <f:selectItems value="#{usuarioController.listEstados}"
+                                           var="usuarioEstadoEditItemBuscar"
+                                           itemValue="#{usuarioEstadoEditItemBuscar}"/>
+                        </p:selectOneMenu>
+                       <p:outputLabel value="#{bundle.EditUsuarioLabel_correo}" for="correo" />
                         <p:inputText id="correo" value="#{usuarioController.selectedBuscar.correo}" title="#{bundle.EditUsuarioTitle_correo}" required="true" requiredMessage="#{bundle.EditUsuarioRequiredMessage_correo}"/>
                     </p:panelGrid>
                     <p:commandButton actionListener="#{usuarioController.update}" value="#{bundle.Save}" update="display,:UsuarioListForm:datalist,:BuscarUsuarioListForm:datalist2,:growl" oncomplete="handleSubmit(args, 'UsuarioEditDialogBuscar');"/>

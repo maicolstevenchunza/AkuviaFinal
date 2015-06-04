@@ -41,4 +41,16 @@ public class UsuarioFacade extends AbstractFacade<Usuario> {
         queryJPQL.setParameter("rol", rolUsuBuscar);
         return queryJPQL.getResultList();
     }
+    
+    public List<Usuario> findByParteEstado(String estadoUsuBuscar) {
+        Query queryJPQL = getEntityManager().createNamedQuery("Usuario.findByEstado");
+        queryJPQL.setParameter("estado", estadoUsuBuscar);
+        return queryJPQL.getResultList();
+    }
+    
+    public List<Usuario> findByParteCorreo(String correoUsuBuscar) {
+        String sqlQuery = "SELECT * FROM usuario usu where usu.CORREO like '%" + correoUsuBuscar + "%';";
+        Query query1 = getEntityManager().createNativeQuery(sqlQuery, Usuario.class);
+        return query1.getResultList();
+    }
 }
