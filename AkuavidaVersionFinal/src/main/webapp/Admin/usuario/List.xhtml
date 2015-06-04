@@ -47,12 +47,6 @@
                         </p:column>
                         <p:column>
                             <f:facet name="header">
-                                <h:outputText value="#{bundle.ListUsuarioTitle_contrasena}"/>
-                            </f:facet>
-                            <h:outputText value="#{item.contrasena}"/>
-                        </p:column>
-                        <p:column>
-                            <f:facet name="header">
                                 <h:outputText value="#{bundle.ListUsuarioTitle_correo}"/>
                             </f:facet>
                             <h:outputText value="#{item.correo}"/>
@@ -95,6 +89,33 @@
                             <p:message for="buscarRolUsu" />
                         </h:panelGrid>
                     </h:form>
+                    
+                    <!--Formulario de buscar por estado -->
+                    <h:form id="BuscarUsuarioForm3">
+                        <p:messages autoUpdate="true" closable="true" for="buscarIdUsuario"/>
+                        <h:panelGrid id="grid1" columns="5"  cellspacing="0" >
+                            <p:outputLabel for="buscarEstadoUsu" value="#{bundle.BuscarUsuarioLabel_Estado}" />
+                            <p:selectOneMenu id="buscarEstadoUsu" value="#{usuarioController.estadoBuscar}" required="true" requiredMessage="#{bundle.CreateUsuarioRequiredMessage_estado}">
+                                <f:selectItems value="#{usuarioController.listEstados}"
+                                               var="usuarioEstadoItemBuscar"
+                                               itemValue="#{usuarioEstadoItemBuscar}"/>
+                            </p:selectOneMenu>
+                            <p:commandButton id="botonEstado" icon="ui-icon-search" value="#{bundle.Buscar}" update=":BuscarUsuarioListForm, :panelBusqueda " actionListener="#{usuarioController.buscarPorEstado}" />
+                            <p:message for="buscarEstadoUsu" />
+                        </h:panelGrid>
+                    </h:form>
+                    
+                    <!--Formulario de buscar por correo -->
+                     <h:form id="BuscarUsuarioForm4">
+                        <p:messages autoUpdate="true" closable="true" for="buscarIdUsuario"/>
+                        <h:panelGrid id="grid1" columns="5"  cellspacing="0">
+                            <p:outputLabel for="buscarCorreoUsu" value="#{bundle.BuscarUsuarioLabel_Correo}"  />
+                            <p:inputText id="buscarCorreoUsu" value="#{usuarioController.correoBuscar}" title="#{bundle.BuscarUsuarioTitle_Correo}" required="true" requiredMessage="#{bundle.CreateUsuarioRequiredMessage_correo}"/>
+                            <p:commandButton id="botonCorreoUsu" icon="ui-icon-search" value="#{bundle.Buscar}" update=":BuscarUsuarioListForm, :panelBusqueda" actionListener="#{usuarioController.buscarPorCorreo}"/>
+                            <p:message for="buscarCorreoUsu" />
+                        </h:panelGrid>
+                    </h:form>
+
                 </h:panelGroup>
             </p:panel>
 
@@ -130,12 +151,6 @@
                                 <h:outputText value="#{bundle.ListUsuarioTitle_estado}"/>
                             </f:facet>
                             <h:outputText value="#{itemEncontrados.estado}"/>
-                        </p:column>
-                        <p:column>
-                            <f:facet name="header">
-                                <h:outputText value="#{bundle.ListUsuarioTitle_contrasena}"/>
-                            </f:facet>
-                            <h:outputText value="#{itemEncontrados.contrasena}"/>
                         </p:column>
                         <p:column>
                             <f:facet name="header">

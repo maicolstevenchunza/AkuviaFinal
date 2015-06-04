@@ -32,6 +32,8 @@ public class UsuarioController implements Serializable {
     private Usuario selectedBuscar;
     private String idBuscar;
     private String rolBuscar;
+    private String estadoBuscar;
+    private String correoBuscar;
     private final List<String> listroles;
     private final List<String> listEstados;
 
@@ -121,6 +123,20 @@ public class UsuarioController implements Serializable {
 
     public List<Usuario> buscarPorRol() {
         itemsBuscados = getFacade().findByParteRol(rolBuscar);
+        items = null;
+        idBuscar = null;
+        return itemsBuscados;
+    }
+
+    public List<Usuario> buscarPorEstado() {
+        itemsBuscados = getFacade().findByParteEstado(estadoBuscar);
+        items = null;
+        idBuscar = null;
+        return itemsBuscados;
+    }
+    
+    public List<Usuario> buscarPorCorreo() {
+        itemsBuscados = getFacade().findByParteCorreo(correoBuscar);
         items = null;
         idBuscar = null;
         return itemsBuscados;
@@ -229,6 +245,22 @@ public class UsuarioController implements Serializable {
 
     public List<String> getListEstados() {
         return listEstados;
+    }
+
+    public String getEstadoBuscar() {
+        return estadoBuscar;
+    }
+
+    public void setEstadoBuscar(String estadoBuscar) {
+        this.estadoBuscar = estadoBuscar;
+    }
+
+    public String getCorreoBuscar() {
+        return correoBuscar;
+    }
+
+    public void setCorreoBuscar(String correoBuscar) {
+        this.correoBuscar = correoBuscar;
     }
 
     @FacesConverter(forClass = Usuario.class)

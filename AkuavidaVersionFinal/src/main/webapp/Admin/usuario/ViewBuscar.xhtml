@@ -12,15 +12,11 @@
             <h:form id="UsuarioViewFormBuscar">
                 <h:panelGroup id="display">
                     <p:panelGrid columns="2" rendered="#{usuarioController.selectedBuscar != null}">
-                        <h:outputText value="#{bundle.ViewUsuarioLabel_idUsuario}"/>
-                        <h:outputText value="#{usuarioController.selectedBuscar.idUsuario}" title="#{bundle.ViewUsuarioTitle_idUsuario}"/>
                         <h:outputText value="#{bundle.ViewUsuarioLabel_rol}"/>
                         <h:outputText value="#{usuarioController.selectedBuscar.rol}" title="#{bundle.ViewUsuarioTitle_rol}"/>
                         <h:outputText value="#{bundle.ViewUsuarioLabel_estado}"/>
                         <h:outputText value="#{usuarioController.selectedBuscar.estado}" title="#{bundle.ViewUsuarioTitle_estado}"/>
-                        <h:outputText value="#{bundle.ViewUsuarioLabel_contrasena}"/>
-                        <h:outputText value="#{usuarioController.selectedBuscar.contrasena}" title="#{bundle.ViewUsuarioTitle_contrasena}"/>
-                        <h:outputText value="#{bundle.ViewUsuarioLabel_correo}"/>
+                       <h:outputText value="#{bundle.ViewUsuarioLabel_correo}"/>
                         <h:outputText value="#{usuarioController.selectedBuscar.correo}" title="#{bundle.ViewUsuarioTitle_correo}"/>
                     </p:panelGrid>
                     <p:commandButton value="#{bundle.Close}" onclick="UsuarioViewDialogBuscar.hide()"/>
